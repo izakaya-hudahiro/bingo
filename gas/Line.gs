@@ -11,15 +11,21 @@ function verifyLineIdToken_(idToken) {
   const channelId = getProp_(PROP_KEYS.LIFF_CHANNEL_ID);
   const res = UrlFetchApp.fetch('https://api.line.me/oauth2/v2.1/verify', {
     method: 'post',
+    contentType: 'application/x-www-form-urlencoded',
     payload: { id_token: idToken, client_id: channelId },
     muteHttpExceptions: true
   });
-  if (res.getResponseCode() !== 200) {
-    Logger.log('IDトークン検証失敗: ' + res.getContentText());
-    return null;
+  const code = res.getResponseCode();
+  const body = res.getContentText();
+  if (code !== 200) {
+    Logger.log('IDトークン検証失敗: code=' + code + ' body=' + body + ' channelId=' + channelId);
+    // 失敗理由をクライアントに返せるようエラーを投げる
+    throw new Error('IDトークン検証に失敗(code=' + code + '): ' + body);
   }
-  const profile = JSON.parse(res.getContentText());
-  if (!profile || !profile.sub) return null;
+  const profile = JSON.parse(body);
+  if (!profile || !profile.sub) {
+    throw new Error('IDトークンにsubが含まれていません: ' + body);
+  }
   return { userId: profile.sub, name: profile.name || '', picture: profile.picture || '' };
 }
 
