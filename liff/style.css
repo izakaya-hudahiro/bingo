@@ -57,7 +57,7 @@ main { padding: 14px 14px 40px; max-width: 480px; margin: 0 auto; }
 h2 { font-size: 17px; margin: 12px 0 14px; }
 h3 { font-size: 14px; margin: 14px 0 8px; color: var(--primary-deep); letter-spacing: 0.04em; }
 
-.error { color: var(--error); font-size: 14px; }
+.error { color: var(--error); font-size: 13px; white-space: pre-wrap; word-break: break-all; }
 .muted { color: var(--muted); }
 .small { font-size: 12px; }
 

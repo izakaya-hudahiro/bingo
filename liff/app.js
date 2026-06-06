@@ -26,22 +26,35 @@ function showError(msg) {
 }
 
 async function init() {
+  const dbg = [];
+  const log = (m) => { dbg.push(m); console.log(m); };
   try {
+    log('[1] start v=2026-06-06b');
     if (CFG.DEMO_MODE) {
       idToken = 'DEMO_TOKEN';
       await loadCard();
       return;
     }
+    log('[2] liff.init liffId=' + CFG.LIFF_ID);
     await liff.init({ liffId: CFG.LIFF_ID });
+    log('[3] liff.init ok inClient=' + liff.isInClient() + ' os=' + liff.getOS());
     if (!liff.isLoggedIn()) {
+      log('[4] not logged in → login()');
       liff.login();
       return;
     }
+    log('[5] logged in. getIDToken...');
     idToken = liff.getIDToken();
+    log('[6] idToken len=' + (idToken ? idToken.length : 0));
+    if (!idToken) throw new Error('IDトークンが取得できませんでした（scope不足の可能性）');
+    log('[7] loadCard...');
     await loadCard();
+    log('[8] loadCard ok');
   } catch (e) {
     console.error(e);
-    showError('LIFFの初期化に失敗しました: ' + (e.message || e));
+    const detail = (e && (e.message || e.code || e.toString())) || '不明';
+    const dbgStr = dbg.length ? '\n\nデバッグ: ' + dbg.join(' → ') : '';
+    showError('LIFFの初期化に失敗しました\n\n詳細: ' + detail + dbgStr);
   }
 }
 
