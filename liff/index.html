@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>居酒屋フダヒロ 🍶</title>
+  <link rel="stylesheet" href="./style.css" />
+  <!-- LIFF SDK（LINE内ブラウザで動かすために必須） -->
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <h1>🍶 居酒屋フダヒロ 🎯</h1>
+    <p class="sub">頼んだ料理でマスを開けよう！</p>
+  </header>
+
+  <main id="app">
+    <!-- ローディング -->
+    <section id="loading" class="screen visible">
+      <p class="muted">カードを準備しています…</p>
+    </section>
+
+    <!-- エラー -->
+    <section id="errorScreen" class="screen">
+      <h2>うまく開けませんでした</h2>
+      <p id="errorText" class="error"></p>
+    </section>
+
+    <!-- メイン画面 -->
+    <section id="boardScreen" class="screen">
+      <div class="status">
+        <div class="status-item">
+          <div class="status-num" id="linesNum">0</div>
+          <div class="status-label">達成ライン</div>
+        </div>
+        <div class="status-item">
+          <div class="status-num" id="reachNum">0</div>
+          <div class="status-label">リーチ</div>
+        </div>
+        <div class="status-item">
+          <div class="status-num" id="nextNum">1</div>
+          <div class="status-label">次の特典</div>
+        </div>
+      </div>
+
+      <p class="hint" id="hintText"></p>
+
+      <div class="grid-wrap">
+        <div class="grid" id="bingoGrid"></div>
+      </div>
+
+      <div class="legend">
+        <h3>🎁 特典</h3>
+        <ul class="rewards-list">
+          <li><span class="medal">🥉</span> 1ライン：生ビール or ソフトドリンク1杯無料</li>
+          <li><span class="medal">🥈</span> 2ライン：本日のデザート1品サービス</li>
+          <li><span class="medal">🥇</span> フルビンゴ：〆メニュー1人前無料</li>
+        </ul>
+      </div>
+
+      <div class="coupons" id="couponsArea">
+        <h3>🎫 獲得クーポン</h3>
+        <div id="couponsList" class="coupons-list">
+          <p class="muted small">まだクーポンはありません。料理を頼んでマスを開けよう！</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 開封確認モーダル -->
+  <div id="confirmModal" class="modal">
+    <div class="modal-body">
+      <div class="modal-emoji" id="confirmEmoji">🍣</div>
+      <h2 id="confirmTitle">このメニュー、注文しましたか？</h2>
+      <p class="modal-menu-name" id="confirmName"></p>
+      <div class="actions">
+        <button class="btn ghost" id="cancelBtn">まだです</button>
+        <button class="btn primary" id="confirmBtn">注文した！</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ビンゴトースト -->
+  <div id="toast" class="toast"></div>
+
+  <!-- 設定（自分の値に書き換える） -->
+  <script>
+    window.APP_CONFIG = {
+      // LIFFアプリのID（LINE Developersコンソールで作成して貼り付け）
+      LIFF_ID: 'XXXXXXXXXX-XXXXXXXX',
+      // GAS Web Appのデプロイ後URL
+      GAS_URL: 'https://script.google.com/macros/s/XXXXXXXXX/exec',
+      // trueでLIFF/GAS不要のローカルプロトタイプとして動作（本番展開時はfalseに変更）
+      DEMO_MODE: true
+    };
+  </script>
+  <script src="./app.js"></script>
+</body>
+</html>
